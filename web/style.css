@@ -1,0 +1,333 @@
+:root {
+  --bg: rgba(15, 18, 25, 0.92);
+  --panel: rgba(20, 24, 34, 0.92);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.65);
+  --muted2: rgba(255, 255, 255, 0.45);
+  --accent: #5b9bff;
+  --danger: #ff5b6e;
+  --ok: #47d18c;
+  --shadow: 0 14px 50px rgba(0, 0, 0, 0.45);
+  --radius: 14px;
+  --scrollTrack: rgba(255, 255, 255, 0.06);
+  --scrollThumb: rgba(255, 255, 255, 0.16);
+  --scrollThumbHover: rgba(255, 255, 255, 0.22);
+}
+
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: transparent !important; }
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: transparent !important;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+.app {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: transparent !important;
+}
+
+.panel {
+  width: 640px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  backdrop-filter: none;
+  height: min(560px, 88vh);
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; min-width: 160px; }
+.dot {
+  width: 10px; height: 10px; border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(91, 155, 255, 0.2);
+}
+.title { font-weight: 700; letter-spacing: 0.2px; }
+.subtitle { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+
+.tabs { display: flex; gap: 8px; flex: 1; justify-content: center; }
+.tab {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.tab.active {
+  background: rgba(91, 155, 255, 0.16);
+  border-color: rgba(91, 155, 255, 0.35);
+  color: var(--text);
+}
+
+.close {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.close:hover { border-color: rgba(255, 91, 110, 0.45); color: var(--text); }
+
+.content {
+  padding: 14px;
+  overflow: auto;
+  min-height: 0;
+}
+.sectionTitle { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+.body {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  flex: 1;
+  min-height: 0; /* critical for overflow children */
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: auto;
+}
+
+.nav {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 9px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.nav.active {
+  background: rgba(91, 155, 255, 0.16);
+  border-color: rgba(91, 155, 255, 0.35);
+  color: var(--text);
+}
+.sidehint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted2);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: start;
+}
+
+/* If the viewport is short, stack columns for better readability */
+@media (max-height: 650px) {
+  .split { grid-template-columns: 1fr; }
+  .body { grid-template-columns: 160px 1fr; }
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 12px;
+}
+.card.danger {
+  border-color: rgba(255, 91, 110, 0.25);
+  background: rgba(255, 91, 110, 0.05);
+}
+.cardTitle {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.row { margin-bottom: 12px; position: relative; }
+.row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row.actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.row.actions.wrap { flex-wrap: wrap; justify-content: flex-start; }
+
+.label { display: block; font-size: 12px; color: var(--muted2); margin-bottom: 6px; }
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  outline: none;
+}
+.input:focus { border-color: rgba(91, 155, 255, 0.5); }
+
+.btn {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.btn:hover { border-color: rgba(255, 255, 255, 0.18); }
+.btn.primary {
+  background: rgba(71, 209, 140, 0.14);
+  border-color: rgba(71, 209, 140, 0.30);
+}
+.dangerBtn {
+  background: rgba(255, 91, 110, 0.10);
+  border-color: rgba(255, 91, 110, 0.25);
+}
+.hint { font-size: 12px; color: var(--muted2); }
+
+.suggestions {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: 72px;
+  background: rgba(15, 18, 25, 0.98);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-height: 220px;
+  overflow: auto;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+.suggestion {
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover { background: rgba(91, 155, 255, 0.10); }
+.suggestion .name { font-weight: 650; }
+.suggestion .label { margin: 0; font-size: 12px; color: var(--muted2); }
+
+.coordsBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  margin-bottom: 12px;
+}
+.coordsLine { display: flex; justify-content: space-between; gap: 10px; }
+.coordsLine .k { color: var(--muted2); font-size: 12px; }
+.coordsLine .v { color: var(--text); font-size: 12px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.toggle input { accent-color: var(--accent); }
+
+.textarea {
+  resize: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Scrollbar styling (FiveM NUI = Chromium) */
+.content::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar,
+textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.content::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track,
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.content::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb {
+  background: var(--scrollThumb);
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.0);
+  background-clip: padding-box;
+}
+.content::-webkit-scrollbar-thumb:hover,
+.sidebar::-webkit-scrollbar-thumb:hover,
+textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollThumbHover);
+}
+.content::-webkit-scrollbar-corner,
+.sidebar::-webkit-scrollbar-corner,
+textarea::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.content::-webkit-scrollbar-button,
+.sidebar::-webkit-scrollbar-button,
+textarea::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.toast {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  font-size: 12px;
+}
+
+/* Simple list rows (reuse for permission ranks) */
+.members {
+  display: grid;
+  gap: 8px;
+}
+.memberRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.memberName {
+  font-weight: 650;
+  font-size: 12px;
+  color: var(--text);
+}
+.pill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+}
+.pill.on {
+  background: rgba(71, 209, 140, 0.14);
+  border-color: rgba(71, 209, 140, 0.30);
+  color: var(--text);
+}
+

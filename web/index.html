@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M7MD-tool</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app" class="app hidden">
+      <div class="panel">
+        <div class="topbar">
+          <div class="brand">
+            <div class="dot"></div>
+            <div>
+              <div class="title">M7MD-tool</div>
+              <div class="subtitle">Dev toolbox</div>
+            </div>
+          </div>
+
+          <div class="tabs"></div>
+          <button id="closeBtn" class="close" title="Close">X</button>
+        </div>
+
+        <div class="body">
+          <div class="sidebar">
+            <button class="nav active" data-tab="home">Home</button>
+            <button class="nav" data-tab="give">Give Item</button>
+            <button class="nav" data-tab="coords">Copy Coords</button>
+            <button class="nav" data-tab="inventory">Inventory</button>
+            <button class="nav" data-tab="player">Player</button>
+            <button class="nav" data-tab="zones">Zones</button>
+            <button class="nav" data-tab="debug">Debug</button>
+            <button class="nav" data-tab="snippets">Snippets</button>
+            <div class="sidehint">Command: /dt</div>
+          </div>
+
+          <div class="content">
+            <div id="tabHome" class="tabview">
+              <div class="sectionTitle">Home</div>
+              <div class="row actions wrap">
+                <button class="btn" data-goto-tab="give">Give Item</button>
+                <button class="btn" data-goto-tab="coords">Copy Coords</button>
+                <button class="btn" data-goto-tab="inventory">Inventory</button>
+                <button class="btn" data-goto-tab="player">Player</button>
+                <button class="btn" data-goto-tab="zones">Zones</button>
+                <button class="btn" data-goto-tab="snippets">Snippets</button>
+              </div>
+              <div class="hint">Everything is server-validated. High-impact actions require confirm.</div>
+            </div>
+
+            <div id="tabGive" class="tabview hidden">
+              <div class="sectionTitle">Give Item</div>
+              <div class="row">
+                <label class="label">Item</label>
+                <input id="give_itemInput" class="input" type="text" placeholder="type item name..." autocomplete="off" />
+                <div id="give_itemSuggestions" class="suggestions hidden"></div>
+              </div>
+              <div class="row two">
+                <div>
+                  <label class="label">Amount</label>
+                  <input id="give_amountInput" class="input" type="number" min="1" step="1" value="1" />
+                </div>
+                <div>
+                  <label class="label">Target ID (optional)</label>
+                  <input id="give_targetInput" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                </div>
+              </div>
+              <div class="row actions">
+                <button id="giveBtn" class="btn primary">Give</button>
+                <div class="hint">/m7give</div>
+              </div>
+            </div>
+
+            <div id="tabCoords" class="tabview hidden">
+              <div class="sectionTitle">Copy Coords</div>
+              <div class="coordsBox">
+                <div class="coordsLine"><span class="k">x</span><span id="cx" class="v">0</span></div>
+                <div class="coordsLine"><span class="k">y</span><span id="cy" class="v">0</span></div>
+                <div class="coordsLine"><span class="k">z</span><span id="cz" class="v">0</span></div>
+                <div class="coordsLine"><span class="k">h</span><span id="ch" class="v">0</span></div>
+                <div class="coordsLine"><span class="k">street</span><span id="cstreet" class="v">-</span></div>
+              </div>
+              <div class="row actions wrap">
+                <button class="btn" data-copy="vec4">Copy vec4</button>
+                <button class="btn" data-copy="vector4">Copy vector4</button>
+                <button class="btn" data-copy="vec3">Copy vec3</button>
+                <button class="btn" data-copy="vector3">Copy vector3</button>
+                <button class="btn" data-copy="json">Copy JSON</button>
+                <button class="btn" data-copy="configSnippet">Copy Config snippet</button>
+                <button class="btn" data-copy="teleportSnippet">Copy Teleport snippet</button>
+                <button class="btn" data-copy="street" id="copyStreetBtn">Copy Street</button>
+                <button class="btn" id="copyPlayerBtn">Copy Player Info</button>
+              </div>
+              <div class="row actions">
+                <label class="toggle">
+                  <input id="overlayToggle" type="checkbox" />
+                  <span>Debug overlay</span>
+                </label>
+                <div class="hint">/m7coords</div>
+              </div>
+            </div>
+
+            <div id="tabInventory" class="tabview hidden">
+              <div class="sectionTitle">Inventory Tools</div>
+              <div class="split">
+                <div class="card">
+                  <div class="cardTitle">Remove Item</div>
+                  <div class="row">
+                    <label class="label">Item</label>
+                    <input id="rem_itemInput" class="input" type="text" placeholder="type item name..." autocomplete="off" />
+                    <div id="rem_itemSuggestions" class="suggestions hidden"></div>
+                  </div>
+                  <div class="row two">
+                    <div>
+                      <label class="label">Amount</label>
+                      <input id="rem_amountInput" class="input" type="number" min="1" step="1" value="1" />
+                    </div>
+                    <div>
+                      <label class="label">Target ID (optional)</label>
+                      <input id="rem_targetInput" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                    </div>
+                  </div>
+                  <div class="row actions">
+                    <button id="removeBtn" class="btn">Remove</button>
+                    <div class="hint">Server-side validated</div>
+                  </div>
+                </div>
+                <div class="card danger">
+                  <div class="cardTitle">Clear Inventory</div>
+                  <div class="row">
+                    <label class="label">Target ID (optional)</label>
+                    <input id="clr_targetInput" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                  </div>
+                  <div class="row actions">
+                    <label class="toggle">
+                      <input id="clr_confirm" type="checkbox" />
+                      <span>I confirm</span>
+                    </label>
+                    <button id="clearBtn" class="btn dangerBtn">Clear</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tabPlayer" class="tabview hidden">
+              <div class="sectionTitle">Player Tools</div>
+              <div class="split">
+                <div class="card">
+                  <div class="cardTitle">Goto / Bring</div>
+                  <div class="row">
+                    <label class="label">Target ID</label>
+                    <input id="pl_targetInput" class="input" type="number" min="1" step="1" placeholder="player id" />
+                  </div>
+                  <div class="row actions">
+                    <label class="toggle">
+                      <input id="pl_confirm" type="checkbox" />
+                      <span>Confirm</span>
+                    </label>
+                    <button id="gotoBtn" class="btn">Goto</button>
+                    <button id="bringBtn" class="btn">Bring</button>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardTitle">Give Money</div>
+                  <div class="row two">
+                    <div>
+                      <label class="label">Type</label>
+                      <select id="money_type" class="input"></select>
+                    </div>
+                    <div>
+                      <label class="label">Amount</label>
+                      <input id="money_amount" class="input" type="number" min="1" step="1" value="100" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="label">Target ID (optional)</label>
+                    <input id="money_target" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                  </div>
+                  <div class="row actions">
+                    <button id="moneyBtn" class="btn primary">Give Money</button>
+                    <div class="hint">Max controlled by config</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="split">
+                <div class="card">
+                  <div class="cardTitle">Set Job</div>
+                  <div class="row">
+                    <label class="label">Job name</label>
+                    <input id="job_name" class="input" type="text" placeholder="job name..." autocomplete="off" />
+                    <div id="job_suggestions" class="suggestions hidden"></div>
+                  </div>
+                  <div class="row two">
+                    <div>
+                      <label class="label">Grade</label>
+                      <input id="job_grade" class="input" type="number" min="0" step="1" value="0" />
+                    </div>
+                    <div>
+                      <label class="label">Target ID (optional)</label>
+                      <input id="job_target" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                    </div>
+                  </div>
+                  <div class="row actions">
+                    <button id="jobBtn" class="btn">Set Job</button>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardTitle">Set Gang</div>
+                  <div class="row">
+                    <label class="label">Gang name</label>
+                    <input id="gang_name" class="input" type="text" placeholder="gang name..." autocomplete="off" />
+                    <div id="gang_suggestions" class="suggestions hidden"></div>
+                  </div>
+                  <div class="row two">
+                    <div>
+                      <label class="label">Grade</label>
+                      <input id="gang_grade" class="input" type="number" min="0" step="1" value="0" />
+                    </div>
+                    <div>
+                      <label class="label">Target ID (optional)</label>
+                      <input id="gang_target" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                    </div>
+                  </div>
+                  <div class="row actions">
+                    <button id="gangBtn" class="btn">Set Gang</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardTitle">Teleport To Coords</div>
+                <div class="row two">
+                  <div>
+                    <label class="label">x</label>
+                    <input id="tp_x" class="input" type="number" step="0.001" />
+                  </div>
+                  <div>
+                    <label class="label">y</label>
+                    <input id="tp_y" class="input" type="number" step="0.001" />
+                  </div>
+                </div>
+                <div class="row two">
+                  <div>
+                    <label class="label">z</label>
+                    <input id="tp_z" class="input" type="number" step="0.001" />
+                  </div>
+                  <div>
+                    <label class="label">h</label>
+                    <input id="tp_h" class="input" type="number" step="0.001" />
+                  </div>
+                </div>
+                <div class="row actions">
+                  <label class="toggle">
+                    <input id="tp_confirm" type="checkbox" />
+                    <span>Confirm</span>
+                  </label>
+                  <button id="tpBtn" class="btn">Teleport</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardTitle">Set Metadata</div>
+                <div class="row two">
+                  <div>
+                    <label class="label">Key</label>
+                    <input id="meta_key" class="input" type="text" placeholder="e.g. hunger, thirst, armor" />
+                  </div>
+                  <div>
+                    <label class="label">Target ID (optional)</label>
+                    <input id="meta_target" class="input" type="number" min="0" step="1" placeholder="leave empty for me" />
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="label">Value</label>
+                  <textarea id="meta_value" class="input textarea" rows="4" placeholder="string or JSON"></textarea>
+                </div>
+                <div class="row actions">
+                  <label class="toggle">
+                    <input id="meta_isJson" type="checkbox" />
+                    <span>Value is JSON</span>
+                  </label>
+                  <button id="metaBtn" class="btn">Set Metadata</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardTitle">Permission</div>
+                <div class="row two">
+                  <div>
+                    <label class="label">Target ID</label>
+                    <input id="perm_target" class="input" type="number" min="1" step="1" placeholder="player id" />
+                  </div>
+                  <div>
+                    <label class="label">Current</label>
+                    <input id="perm_current" class="input" type="text" disabled value="-" />
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="label">Kick reason</label>
+                  <input id="perm_kickReason" class="input" type="text" placeholder="optional reason" />
+                </div>
+                <div class="row actions">
+                  <button id="perm_get" class="btn">Get</button>
+                  <button id="perm_remove" class="btn dangerBtn">Remove (set user)</button>
+                  <button id="perm_kick" class="btn dangerBtn">Kick</button>
+                </div>
+                <div class="row">
+                  <label class="label">All ranks</label>
+                  <div id="perm_list" class="members"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tabZones" class="tabview hidden">
+              <div class="sectionTitle">Zones Builder</div>
+              <div class="row two">
+                <div>
+                  <label class="label">Mode</label>
+                  <select id="zone_mode" class="input">
+                    <option value="poly">PolyZone</option>
+                    <option value="box">BoxZone</option>
+                    <option value="circle">CircleZone</option>
+                  </select>
+                </div>
+                <div class="row actions" style="margin:0;">
+                  <label class="toggle">
+                    <input id="zone_preview" type="checkbox" />
+                    <span>Preview</span>
+                  </label>
+                  <button id="zone_copy" class="btn primary">Copy Snippet</button>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="label">Snippet type</label>
+                <select id="zone_snipType" class="input">
+                  <option value="qb-polyzone">qb-polyzone</option>
+                  <option value="qb-target">qb-target</option>
+                  <option value="ox_lib">ox_lib zones</option>
+                </select>
+              </div>
+
+              <div id="zone_poly" class="card">
+                <div class="cardTitle">Poly Points</div>
+                <div class="row actions wrap">
+                  <button id="zone_addPoint" class="btn">Add point (my coords)</button>
+                  <button id="zone_undoPoint" class="btn">Undo</button>
+                  <button id="zone_clearPoints" class="btn dangerBtn">Clear</button>
+                </div>
+                <div class="hint">Need 3+ points. Preview draws markers/lines.</div>
+              </div>
+
+              <div id="zone_boxcircle" class="card hidden">
+                <div class="cardTitle">Box/Circle Params</div>
+                <div class="row two">
+                  <div>
+                    <label class="label">Radius (circle)</label>
+                    <input id="zone_radius" class="input" type="number" step="0.1" value="3" />
+                  </div>
+                  <div>
+                    <label class="label">Heading</label>
+                    <input id="zone_heading" class="input" type="number" step="0.1" value="0" />
+                  </div>
+                </div>
+                <div class="row two">
+                  <div>
+                    <label class="label">Length (box)</label>
+                    <input id="zone_length" class="input" type="number" step="0.1" value="3" />
+                  </div>
+                  <div>
+                    <label class="label">Width (box)</label>
+                    <input id="zone_width" class="input" type="number" step="0.1" value="3" />
+                  </div>
+                </div>
+                <div class="row two">
+                  <div>
+                    <label class="label">minZ</label>
+                    <input id="zone_minZ" class="input" type="number" step="0.1" />
+                  </div>
+                  <div>
+                    <label class="label">maxZ</label>
+                    <input id="zone_maxZ" class="input" type="number" step="0.1" />
+                  </div>
+                </div>
+                <div class="row actions">
+                  <button id="zone_applyParams" class="btn">Apply Params</button>
+                  <div class="hint">Center = your current coords</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tabDebug" class="tabview hidden">
+              <div class="sectionTitle">Debug</div>
+              <div class="card">
+                <div class="cardTitle">Event Tester (whitelist)</div>
+                <div class="row">
+                  <label class="label">Event name</label>
+                  <input id="ev_name" class="input" type="text" placeholder="event name..." />
+                </div>
+                <div class="row">
+                  <label class="label">JSON payload (optional)</label>
+                  <textarea id="ev_payload" class="input textarea" rows="5" placeholder='{\"foo\":123}'></textarea>
+                </div>
+                <div class="row actions">
+                  <button id="ev_btn" class="btn">Trigger</button>
+                  <div class="hint">Disabled unless enabled in config + allowlist</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tabSnippets" class="tabview hidden">
+              <div class="sectionTitle">Snippets</div>
+              <div class="card">
+                <div class="cardTitle">Generator</div>
+                <div class="row two">
+                  <div>
+                    <label class="label">Type</label>
+                    <select id="snip_type" class="input">
+                      <option value="clientEvent">Client Event</option>
+                      <option value="serverEvent">Server Event</option>
+                      <option value="callback">Callback (ox_lib)</option>
+                      <option value="qbCommand">QBCore Command</option>
+                      <option value="qbItem">QBCore Item (shared/items.lua)</option>
+                      <option value="qbJob">QBCore Job (shared/jobs.lua)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="label">Name</label>
+                    <input id="snip_name" class="input" type="text" placeholder="resource:eventName" />
+                  </div>
+                </div>
+                <div class="row actions">
+                  <button id="snip_gen" class="btn primary">Generate</button>
+                  <button id="snip_copy" class="btn">Copy</button>
+                </div>
+                <div class="row">
+                  <label class="label">Output</label>
+                  <textarea id="snip_out" class="input textarea" rows="9"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="toast" class="toast hidden"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
+
